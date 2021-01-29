@@ -1,0 +1,39 @@
+// I am getting the table titled "_internal" and show the columns of "time" and "sourcetype"
+// a pipe or | separates the commands
+index="_internal" | table _time sourcetype
+
+// shows all records that have "sourcetype"
+index="_internal" "sourcetype"
+
+// rename date_hour as hours
+index="_internal" | table _time "sourcetype" "date_hour" | rename date_hour as hours
+
+// takes out the field titled "hours"
+index="_internal" | table _time "sourcetype" "date_hour" | rename date_hour as hours | fields - hours
+
+// shows distinct sourcetypes
+index="_internal" | table _time "sourcetype" "date_hour" | dedup sourcetype
+
+// gives me 2 values of sourcetype
+index="_internal" | table _time "sourcetype" "date_hour" | dedup 2 sourcetype
+
+// gives me 5 values of date_hour
+index="_internal" | table _time "sourcetype" "date_hour" | dedup 5 date_hour
+
+// sorts results based on date_hour, descending (highest to lowest) 
+index="_internal" | table _time "sourcetype" "date_hour" | dedup 2 "date_hour" sortby -date_hour
+
+// top command finds the count that has the highest/most count 
+index="_internal" | table _time "sourcetype" "component" | top sourcetype
+
+// least count 
+index="_internal" | table _time "sourcetype" "component" | rare sourcetype
+
+// stats: shows distinct components [and how many] for each sourcetype
+index="_internal" | stats distinct_count(component) by sourcetype
+
+// average of hours 
+index="_internal" | stats avg(date_hour) by sourcetype
+
+// sum of bytes used
+index="_internal" | stats sum(bytes) by sourcetype
